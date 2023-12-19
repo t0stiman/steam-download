@@ -11,6 +11,9 @@ inputs:
   path:
     description: 'Path to download the game to'
     required: false
+  filelist:
+    description: 'List of files to keep after downloading (string, separated by commas)'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -22,3 +25,4 @@ runs:
         STEAM_TOTP: ${{ inputs.totp }}
         STEAM_APP_ID: ${{ inputs.appid }}
         STEAM_GAME_PATH: ${{ inputs.path }}
+        STEAM_FILE_LIST: ${{ inputs.filelist }}
