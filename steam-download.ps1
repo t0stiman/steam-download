@@ -38,20 +38,7 @@ $SteamCMDArgs = @(
 $LoginMethod = "anonymous"
 
 # If STEAM_TOTP is set, use it to login, else use anonymous login
-if ($env:STEAM_VDF) {
-    Write-Output ""
-    Write-Output "#################################"
-    Write-Output "#     Using SteamGuard VDF      #"
-    Write-Output "#################################"
-    Write-Output ""
-
-    $SteamGuardVDFPath = "$SteamCMDPath\config"
-    New-Item -ItemType Directory -Force -Path $SteamGuardVDFPath
-    $DecodedVDF = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($env:STEAM_VDF))
-    $DecodedVDF | Out-File "$SteamGuardVDFPath\config.vdf" -Encoding utf8
-
-    $LoginMethod = "vdf"
-} elseif ($env:STEAM_TOTP) {
+if ($env:STEAM_TOTP) {
     Write-Output ""
     Write-Output "#################################"
     Write-Output "#     Using SteamGuard TOTP     #"
@@ -78,13 +65,7 @@ Write-Output ""
 $SteamUsername = $env:STEAM_USERNAME ?? "anonymous"
 $SteamPassword = $env:STEAM_PASSWORD ?? ""
 
-if ($LoginMethod -eq "vdf") {
-    $SteamCMDArgs = @(
-        "+@ShutdownOnFailedCommand 1"
-        "+login $SteamUsername"
-        "+quit"
-    )
-} elseif ($LoginMethod -eq "totp") {
+if ($LoginMethod -eq "totp") {
     $SteamCMDArgs = @(
         "+@ShutdownOnFailedCommand 1"
         "+set_steam_guard_code $env:STEAM_TOTP"
